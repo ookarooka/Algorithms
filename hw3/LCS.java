@@ -20,9 +20,9 @@ public class LCS {
 		  }
       ///recur1
      	if (rStr.charAt(r - 1) == cStr.charAt(c - 1)) {
-    		Set<String> continuing = collectSolution(rStr, r - 1, cStr, c - 1, memo);
-    		Set<String> result = new HashSet<String>();
-    		for (String s : continuing) {
+     		Set<String> result = new HashSet<String>();
+    		Set<String> temp = collectSolution(rStr, r - 1, cStr, c - 1, memo);
+    		for (String s : temp) {
     			result.add(s + rStr.charAt(r - 1));
     		}
     		return result;
@@ -65,34 +65,33 @@ public class LCS {
    // -----------------------------------------------
 
 	 public static Set<String> topDownLCS (String rStr, String cStr) {
-		 boolean[][] haveVisited = new boolean[rStr.length() + 1][cStr.length() + 1];
-	    	memoCheck = new int[rStr.length() + 1][cStr.length() + 1];
-	    	topDownTableFill(memoCheck, haveVisited,rStr, rStr.length(), cStr, cStr.length());
+		 int[][] memoTable = new int[rStr.length() + 1][cStr.length() + 1];
+	        memoCheck = memoTable;
+	     boolean[][] filler = new boolean[rStr.length() + 1][cStr.length() + 1];
+	    	lcsRecursiveHelper(rStr, rStr.length(), cStr, cStr.length(), memoCheck, filler);
 	    	return collectSolution(rStr, rStr.length(), cStr, cStr.length(), memoCheck);
 	    }
 	        
-	    /**
-	     * Fills the memoization table using top-down dynamic programming
-	     * @param rStr The String found along the table's rows
-	     * @param cStr The String found along the table's cols
-	     * @param visited ArrayList of Strings for which the sub-solution has already been found (stored as "rStr|cStr")
-	     * @return 2D array containing the memoized values
-	     */
+	//Top Down Recursive Helper//
 	 
-	  public static int topDownTableFill(int[][] table, boolean[][] haveVisited, String rStr, int row, String cStr, int column) {
-	    	if(row == 0 || column == 0) {
-	    		return 0;
-	    	}
-	    	if(haveVisited[row][column] == true) {
-	    		return table[row][column];
-	    	} else if(rStr.charAt(row - 1) == cStr.charAt(column - 1)) {
-	    		haveVisited[row][column] = true;
-	    		table[row][column] = 1 + topDownTableFill(table, haveVisited, rStr, row -1, cStr, column -1);
+	  static int lcsRecursiveHelper(String rStr, int r, String cStr, int c, int[][] memo, boolean[][] filler) {
+		 //base
+		  if (r == 0 || c == 0) {
+				return 0;
+				  }
+	    	if (filler[r][c] == true) {
+	    		return memo[r][c];
+	     //recur1
+	    	} else if(rStr.charAt(r - 1) == cStr.charAt(c - 1)) {
+	    		filler[r][c] = true;
+	    		memo[r][c] = 1 + lcsRecursiveHelper(rStr, r-1, cStr, c-1, memo, filler);
 	    	} else {
-	    		haveVisited[row][column] = true;
-	    		table[row][column] = Math.max(topDownTableFill(table, haveVisited, rStr, row -1, cStr, column), topDownTableFill(table, haveVisited, rStr, row, cStr, column -1));
+	    		filler[r][c] = true;
+	     //recur2&3
+	    		memo[r][c] = Math.max(lcsRecursiveHelper(rStr, r-1, cStr, c, memo, filler), 
+	    		lcsRecursiveHelper(rStr, r, cStr, c-1, memo, filler));
 	    	}
-	    		return table[row][column];
+	    		return memo[r][c];
 	    }
 
 	}
