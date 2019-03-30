@@ -66,32 +66,28 @@ public class LCS {
 	 public static Set<String> topDownLCS (String rStr, String cStr) {
 		 int[][] memo = new int[rStr.length() + 1][cStr.length() + 1];
 	        memoCheck = memo;
-	     boolean[][] filler = new boolean[rStr.length() + 1][cStr.length() + 1];
-	    	lcsRecursiveHelper(rStr, rStr.length(), cStr, cStr.length(), memoCheck, filler);
+	    	lcsRecursiveHelper(rStr, rStr.length(), cStr, cStr.length(), memoCheck);
 	    	return collectSolution(rStr, rStr.length(), cStr, cStr.length(), memoCheck);
 	    }
 	        
 	//Top Down Recursive Helper//
 	 
-	  static int lcsRecursiveHelper(String rStr, int r, String cStr, int c, int[][] memo, boolean[][] filler) {
+	  static int lcsRecursiveHelper(String rStr, int r, String cStr, int c, int[][] result) {
 		 //base
 		  if (r == 0 || c == 0) {
 				return 0;
-				  }
-	    	if (filler[r][c] == true) {
-	    		return memo[r][c];
-	     //recur1
+		  }
+		//recur1  
+		  if (result[r][c] !=0) {
+				return result[r][c];
+	     //recur2&3
 	    	} else if(rStr.charAt(r - 1) == cStr.charAt(c - 1)) {
-	    		filler[r][c] = true;
-	    		memo[r][c] = 1 + lcsRecursiveHelper(rStr, r-1, cStr, c-1, memo, filler);
+	    		result[r][c] = 1 + lcsRecursiveHelper(rStr, r-1, cStr, c-1, result);
 	    	} else {
-	    		filler[r][c] = true;
-	     //recur2
-	    		memo[r][c] = Math.max(lcsRecursiveHelper(rStr, r-1, cStr, c, memo, filler),
-	     //recur3
-	    		lcsRecursiveHelper(rStr, r, cStr, c-1, memo, filler));
+	    		result[r][c] = Math.max(lcsRecursiveHelper(rStr, r-1, cStr, c, result),
+	    		lcsRecursiveHelper(rStr, r, cStr, c-1, result));
 	    	}
-	    		return memo[r][c];
+	    		return result[r][c];
 	    }
 
 	}
