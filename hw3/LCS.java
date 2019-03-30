@@ -19,9 +19,9 @@ public class LCS {
        //base
      	if (r == 0 || c == 0) {
         Set<String> nulld = new HashSet<String>();
-			nulld.add("");
+		nulld.add("");
 			return nulld;
-		  }
+	}
       ///recur1
      	Set<String> value = new HashSet<String>();
      	Set<String> temp = collectSolution(rStr, r-1, cStr, c-1, memo);
