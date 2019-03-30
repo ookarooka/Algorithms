@@ -6,7 +6,6 @@ package lcs;
 import java.util.HashSet;
 import java.util.Set;
 
-
 public class LCS {
 
     public static int[][] memoCheck;
@@ -19,8 +18,8 @@ public class LCS {
        //base
     	Set<String> string = new HashSet<String>();
      	if (r == 0 || c == 0) {
-			string.add("");
-				return string;
+		string.add("");
+		return string;
      	}
       ///recur1
      	Set<String> value = new HashSet<String>();
