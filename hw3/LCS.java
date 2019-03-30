@@ -1,3 +1,7 @@
+//Author: Joshua Patterson
+//Date: March 29, 2019
+//Purpose: To implement the Longest Common Subsequence algorithm from both the bottom-up and top-down dynamic programming 
+
 package lcs;
 import java.util.HashSet;
 import java.util.Set;
@@ -41,19 +45,19 @@ public class LCS {
 
 
     // -----------------------------------------------
-    // Bottom-Up LCS
+    // Bottom-Up LCS + fill
     // -----------------------------------------------
 
 	public static Set<String> bottomUpLCS (String rStr, String cStr) {
-        int[][] memo = new int[rStr.length() + 1][cStr.length() + 1];
-        memoCheck = memo;
+        int[][] fill = new int[rStr.length() + 1][cStr.length() + 1];
+        memoCheck = fill;
         for(int r = 1; r < rStr.length() + 1; r++) {
             for(int c = 1; c < cStr.length() + 1; c++) {
                 if(rStr.charAt(r-1) == cStr.charAt(c-1) ) {
-                   memo[r][c] = 1 + memo[r-1][c-1];
+                   fill[r][c] = fill[r-1][c-1] + 1;
                 }
                 else {
-                   memo[r][c]= Math.max(memo[r][c-1] , memo[r-1][c]);
+                   fill[r][c]= Math.max(fill[r][c-1], fill[r-1][c]);
                 }
             }
         }
@@ -64,30 +68,29 @@ public class LCS {
    // -----------------------------------------------
 
 	 public static Set<String> topDownLCS (String rStr, String cStr) {
-		 int[][] memo = new int[rStr.length() + 1][cStr.length() + 1];
-	        memoCheck = memo;
+		 int[][] fill = new int[rStr.length() + 1][cStr.length() + 1];
+	        memoCheck = fill;
 	    	lcsRecursiveHelper(rStr, rStr.length(), cStr, cStr.length(), memoCheck);
 	    	return collectSolution(rStr, rStr.length(), cStr, cStr.length(), memoCheck);
 	    }
-	        
-	//Top Down Recursive Helper//
 	 
-	  static int lcsRecursiveHelper(String rStr, int r, String cStr, int c, int[][] result) {
+	//Top Down Helper//
+	  static int lcsRecursiveHelper(String rStr, int r, String cStr, int c, int[][] fill) {
 		 //base
 		  if (r == 0 || c == 0) {
 				return 0;
 		  }
 		//recur1  
-		  if (result[r][c] !=0) {
-				return result[r][c];
+		  if (fill[r][c] !=0) {
+				return fill[r][c];
 	     //recur2&3
-	    	} else if(rStr.charAt(r - 1) == cStr.charAt(c - 1)) {
-	    		result[r][c] = 1 + lcsRecursiveHelper(rStr, r-1, cStr, c-1, result);
+	    	} else if(rStr.charAt(r-1) == cStr.charAt(c-1)) {
+	    		fill[r][c] = lcsRecursiveHelper(rStr, r-1, cStr, c-1, fill) + 1;
 	    	} else {
-	    		result[r][c] = Math.max(lcsRecursiveHelper(rStr, r-1, cStr, c, result),
-	    		lcsRecursiveHelper(rStr, r, cStr, c-1, result));
+	    		fill[r][c] = Math.max(lcsRecursiveHelper(rStr, r-1, cStr, c, fill),
+	    		lcsRecursiveHelper(rStr, r, cStr, c-1, fill));
 	    	}
-	    		return result[r][c];
+	    		return fill[r][c];
 	    }
 
 	}
