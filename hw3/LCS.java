@@ -1,7 +1,7 @@
 package lcs;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.ArrayList;
+
 
 public class LCS {
 
@@ -65,8 +65,9 @@ public class LCS {
    // -----------------------------------------------
 
 	 public static Set<String> topDownLCS (String rStr, String cStr) {
-	    	ArrayList<String> visited = new ArrayList<>();
-	    	memoCheck = topDownTableFill(rStr, cStr, new int[rStr.length()+1][cStr.length()+1], visited);
+		 boolean[][] haveVisited = new boolean[rStr.length() + 1][cStr.length() + 1];
+	    	memoCheck = new int[rStr.length() + 1][cStr.length() + 1];
+	    	topDownTableFill(memoCheck, haveVisited,rStr, rStr.length(), cStr, cStr.length());
 	    	return collectSolution(rStr, rStr.length(), cStr, cStr.length(), memoCheck);
 	    }
 	        
@@ -78,31 +79,20 @@ public class LCS {
 	     * @return 2D array containing the memoized values
 	     */
 	 
-	 private static String removeLastChar(String str) {
-		    return str.substring(0, str.length() - 1);
-		}
-	 
-	 public static char lastChar(String s) {
-	    	return s.charAt(s.length()-1);
-	    }
-	 
-	    public static int[][] topDownTableFill( String rStr, String cStr, int[][] inputTable, ArrayList<String> visited) {
-	    	int[][] memoTable = inputTable;
-	    	
-	    	if ( visited.contains(rStr + "|" + cStr) ) {
-	    		return memoTable;
+	  public static int topDownTableFill(int[][] table, boolean[][] haveVisited, String rStr, int row, String cStr, int column) {
+	    	if(row == 0 || column == 0) {
+	    		return 0;
 	    	}
-	    	
-	    	if ( rStr.length() == 0 || cStr.length() == 0 ) {
-	    		memoTable[rStr.length()][cStr.length()] = 0;
-	    	} else if ( lastChar(rStr) == lastChar(cStr) ) {
-	    		memoTable[rStr.length()][cStr.length()] = 1 + topDownTableFill( removeLastChar(rStr), removeLastChar(cStr), memoTable, visited)[rStr.length()-1][cStr.length()-1];
+	    	if(haveVisited[row][column] == true) {
+	    		return table[row][column];
+	    	} else if(rStr.charAt(row - 1) == cStr.charAt(column - 1)) {
+	    		haveVisited[row][column] = true;
+	    		table[row][column] = 1 + topDownTableFill(table, haveVisited, rStr, row -1, cStr, column -1);
 	    	} else {
-	    		memoTable[rStr.length()][cStr.length()] = Math.max( topDownTableFill( removeLastChar(rStr), cStr, memoTable, visited)[rStr.length()-1][cStr.length()], topDownTableFill( rStr, removeLastChar(cStr), memoTable, visited)[rStr.length()][cStr.length()-1]);
+	    		haveVisited[row][column] = true;
+	    		table[row][column] = Math.max(topDownTableFill(table, haveVisited, rStr, row -1, cStr, column), topDownTableFill(table, haveVisited, rStr, row, cStr, column -1));
 	    	}
-	    	
-	    	visited.add(rStr + "|" + cStr);
-	    	return memoTable;
+	    		return table[row][column];
 	    }
-	    
+
 	}
