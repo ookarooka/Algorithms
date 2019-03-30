@@ -19,9 +19,9 @@ public class LCS {
        //base
      	if (r == 0 || c == 0) {
         Set<String> nulld = new HashSet<String>();
-		nulld.add("");
+			nulld.add("");
 			return nulld;
-	}
+		  }
       ///recur1
      	Set<String> value = new HashSet<String>();
      	Set<String> temp = collectSolution(rStr, r-1, cStr, c-1, memo);
@@ -70,12 +70,12 @@ public class LCS {
 	 public static Set<String> topDownLCS (String rStr, String cStr) {
 		 int[][] fill = new int[rStr.length() + 1][cStr.length() + 1];
 	        memoCheck = fill;
-	    	lcsRecursiveHelper(rStr, rStr.length(), cStr, cStr.length(), memoCheck);
+	    	topDownTableFill(rStr, rStr.length(), cStr, cStr.length(), memoCheck);
 	    	return collectSolution(rStr, rStr.length(), cStr, cStr.length(), memoCheck);
 	    }
 	 
 	//Top Down Helper//
-	  static int lcsRecursiveHelper(String rStr, int r, String cStr, int c, int[][] fill) {
+	  static int topDownTableFill(String rStr, int r, String cStr, int c, int[][] fill) {
 		 //base
 		  if (r == 0 || c == 0) {
 				return 0;
@@ -85,10 +85,10 @@ public class LCS {
 				return fill[r][c];
 	     //recur2&3
 	    	} else if(rStr.charAt(r-1) == cStr.charAt(c-1)) {
-	    		fill[r][c] = lcsRecursiveHelper(rStr, r-1, cStr, c-1, fill) + 1;
+	    		fill[r][c] = topDownTableFill(rStr, r-1, cStr, c-1, fill) + 1;
 	    	} else {
-	    		fill[r][c] = Math.max(lcsRecursiveHelper(rStr, r-1, cStr, c, fill),
-	    		lcsRecursiveHelper(rStr, r, cStr, c-1, fill));
+	    		fill[r][c] = Math.max(topDownTableFill(rStr, r-1, cStr, c, fill),
+	    		topDownTableFill(rStr, r, cStr, c-1, fill));
 	    	}
 	    		return fill[r][c];
 	    }
